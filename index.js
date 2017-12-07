@@ -1,5 +1,5 @@
-const CELL_SIZE = 9;
-const BACKGROUND_COLOR = "#444"
+const CELL_SIZE = 7;
+const BACKGROUND_COLOR = "#444";
 
 class Game {
   constructor(canvasId, cellSize) {
@@ -23,7 +23,7 @@ class Game {
       const lightCycle = this.lightCycles[i];
 
       if (!lightCycle.active) {
-        continuea;
+        continue;
       }
 
       let newDirection;
@@ -175,12 +175,12 @@ players = [
   {
     name: "Mario",
     position: {
-      x: document.getElementById("myCanvas").width / 2,
-      y: document.getElementById("myCanvas").height - 2
+      x: 0,
+      y: 0
     },
     direction: { x: 0, y: -1 },
-    color: "#f00",
-    traceColor: "#00ffff",
+    color: "#8B0000",
+    traceColor: "#f00",
     keyBindings: {
       up: 38,
       down: 40,
@@ -193,17 +193,35 @@ players = [
   {
     name: "Luigi",
     position: {
-      x: document.getElementById("myCanvas").width / 2,
-      y: 2
+      x: 0,
+      y: 0
     },
-    direction: { x: 0, y: 1 },
-    color: "#00f",
-    traceColor: "#ffff00",
+    direction: { x: 1, y: 0 },
+    color: "#006400",
+    traceColor: "#0f0",
     keyBindings: {
       up: 87,
       down: 83,
       left: 65,
       right: 68
+    },
+    active: true,
+    score: 0
+  },
+  {
+    name: "Pitch",
+    position: {
+      x: 0,
+      y: 0
+    },
+    direction: { x: 1, y: 0 },
+    color: "#FF1493",
+    traceColor: "#FF69B4",
+    keyBindings: {
+      up: 72,
+      down: 78,
+      left: 66,
+      right: 77
     },
     active: true,
     score: 0
@@ -214,6 +232,25 @@ function load() {
   const game = new Game("myCanvas", CELL_SIZE);
 
   for (let i = 0; i < players.length; i++) {
+    players[i].position = {
+      x: Math.floor(
+        Math.random() * (document.getElementById("myCanvas").width - CELL_SIZE)
+      ),
+      y: Math.floor(
+        Math.random() * (document.getElementById("myCanvas").height - CELL_SIZE)
+      )
+    };
+
+    directions = [
+      { x: 0, y: -1 },
+      { x: 0, y: 1 },
+      { x: 1, y: 0 },
+      { x: -1, y: 0 }
+    ];
+
+    players[i].direction =
+      directions[Math.floor(Math.random() * directions.length)];
+
     game.addLightCycle(players[i]);
   }
 
@@ -239,7 +276,7 @@ function main() {
   game.update();
   if (game.finished()) {
     const winner = game.getWinner();
-    if (winner !== null) {
+    if (winner) {
       for (let i = 0; i < players.length; i++) {
         if (players[i].name === winner.name) {
           players[i].score += 1;
@@ -252,7 +289,7 @@ function main() {
 
   // Decrease the timeout every 2 seconds
   const elapsedTime = performance.now() - beginningDate;
-  const decreasedTimeout = 200 - CELL_SIZE * Math.floor(elapsedTime / 750);
+  const decreasedTimeout = 200 - CELL_SIZE * Math.floor(elapsedTime / 900);
   setTimeout(function() {
     main();
   }, decreasedTimeout);
